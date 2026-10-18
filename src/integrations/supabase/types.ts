@@ -14,16 +14,167 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      businesses: {
+        Row: {
+          business_type: string
+          created_at: string
+          currency: string
+          id: string
+          name: string
+          owner_id: string
+          timezone: string
+          updated_at: string
+        }
+        Insert: {
+          business_type?: string
+          created_at?: string
+          currency?: string
+          id?: string
+          name: string
+          owner_id: string
+          timezone?: string
+          updated_at?: string
+        }
+        Update: {
+          business_type?: string
+          created_at?: string
+          currency?: string
+          id?: string
+          name?: string
+          owner_id?: string
+          timezone?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      categories: {
+        Row: {
+          archived: boolean
+          business_id: string
+          created_at: string
+          id: string
+          name: string
+          type: Database["public"]["Enums"]["txn_type"]
+          updated_at: string
+        }
+        Insert: {
+          archived?: boolean
+          business_id: string
+          created_at?: string
+          id?: string
+          name: string
+          type: Database["public"]["Enums"]["txn_type"]
+          updated_at?: string
+        }
+        Update: {
+          archived?: boolean
+          business_id?: string
+          created_at?: string
+          id?: string
+          name?: string
+          type?: Database["public"]["Enums"]["txn_type"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "categories_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          full_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          full_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      transactions: {
+        Row: {
+          amount: number
+          business_id: string
+          category_id: string
+          created_at: string
+          created_by: string
+          description: string
+          id: string
+          notes: string | null
+          payment_method: string | null
+          transaction_date: string
+          type: Database["public"]["Enums"]["txn_type"]
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          business_id: string
+          category_id: string
+          created_at?: string
+          created_by?: string
+          description: string
+          id?: string
+          notes?: string | null
+          payment_method?: string | null
+          transaction_date: string
+          type: Database["public"]["Enums"]["txn_type"]
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          business_id?: string
+          category_id?: string
+          created_at?: string
+          created_by?: string
+          description?: string
+          id?: string
+          notes?: string | null
+          payment_method?: string | null
+          transaction_date?: string
+          type?: Database["public"]["Enums"]["txn_type"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_business_id_category_id_type_fkey"
+            columns: ["business_id", "category_id", "type"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["business_id", "id", "type"]
+          },
+          {
+            foreignKeyName: "transactions_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      owns_business: { Args: { _bid: string }; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      txn_type: "income" | "expense"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +301,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      txn_type: ["income", "expense"],
+    },
   },
 } as const
