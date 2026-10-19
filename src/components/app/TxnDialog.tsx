@@ -10,13 +10,15 @@ import { PAYMENT_METHODS, isValidAmount, todayIST, type TxnType } from "@/lib/fi
 import { friendlyError, useSaveTxn, type Category, type Txn } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
+type Errs = { amount?: string; description?: string; category?: string; date?: string; notes?: string };
+
 interface Props {
   open: boolean;
   onOpenChange: (o: boolean) => void;
   businessId: string;
   categories: Category[];
   initialType?: TxnType;
-  editing?: Txn | null;
+  editing?: Txn | null | undefined;
 }
 
 export function TxnDialog({ open, onOpenChange, businessId, categories, initialType = "income", editing }: Props) {
@@ -28,7 +30,7 @@ export function TxnDialog({ open, onOpenChange, businessId, categories, initialT
   const [date, setDate] = useState(todayIST());
   const [method, setMethod] = useState<string>("none");
   const [notes, setNotes] = useState("");
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Errs>({});
 
   useEffect(() => {
     if (!open) return;
@@ -61,7 +63,7 @@ export function TxnDialog({ open, onOpenChange, businessId, categories, initialT
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    const er: Record<string, string> = {};
+    const er: Errs = {};
     if (!isValidAmount(amount)) er.amount = "Enter a positive amount with up to 2 decimals.";
     if (!description.trim()) er.description = "Description is required.";
     else if (description.trim().length > 200) er.description = "Keep it under 200 characters.";
@@ -154,7 +156,7 @@ export function TxnDialog({ open, onOpenChange, businessId, categories, initialT
   );
 }
 
-function Field({ id, label, error, children }: { id: string; label: string; error?: string; children: React.ReactNode }) {
+function Field({ id, label, error, children }: { id: string; label: string; error?: string | undefined; children: React.ReactNode }) {
   return (
     <div className="space-y-1.5">
       <Label htmlFor={id}>{label}</Label>
