@@ -99,7 +99,7 @@ export interface TxnInput {
 export function useSaveTxn(businessId?: string) {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, input }: { id?: string; input: TxnInput }) => {
+    mutationFn: async ({ id, input }: { id?: string | undefined; input: TxnInput }) => {
       const row = { ...input, amount: Number(input.amount) };
       if (id) {
         const { error } = await supabase.from("transactions").update(row).eq("id", id);

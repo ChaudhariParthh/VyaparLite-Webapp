@@ -26,7 +26,7 @@ function Index() {
     <div className="min-h-screen bg-background">
       <header className="mx-auto flex max-w-6xl items-center justify-between px-4 py-5 sm:px-6">
         <Logo />
-        <Button asChild variant="ghost"><Link to="/auth" search={{ redirect: undefined }}>Sign in</Link></Button>
+        <Button asChild variant="ghost"><Link to="/auth">Sign in</Link></Button>
       </header>
       <main className="mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6 sm:pt-20">
         <div className="max-w-2xl">
@@ -40,7 +40,7 @@ function Index() {
             VyaparLite records your income and expenses and shows your net cash flow in rupees — no accounting knowledge needed.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button asChild size="lg"><Link to="/auth" search={{ redirect: undefined }}>Get started free</Link></Button>
+            <Button asChild size="lg"><Link to="/auth">Get started free</Link></Button>
             <Button asChild size="lg" variant="outline"><Link to="/dashboard">Go to dashboard</Link></Button>
           </div>
         </div>

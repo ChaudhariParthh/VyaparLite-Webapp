@@ -71,7 +71,7 @@ function CategoryList({ type, businessId, items }: { type: TxnType; businessId: 
   function submitAdd(e: React.FormEvent) {
     e.preventDefault();
     const n = name.trim();
-    if (!n || n.length > 60) return toast.error("Name must be 1–60 characters.");
+    if (!n || n.length > 60) { toast.error("Name must be 1–60 characters."); return; }
     add.mutate(n);
   }
 
@@ -91,7 +91,7 @@ function CategoryList({ type, businessId, items }: { type: TxnType; businessId: 
                 onSubmit={(e) => {
                   e.preventDefault();
                   const n = editName.trim();
-                  if (!n || n.length > 60) return toast.error("Name must be 1–60 characters.");
+                  if (!n || n.length > 60) { toast.error("Name must be 1–60 characters."); return; }
                   update.mutate({ id: c.id, name: n });
                 }}
               >

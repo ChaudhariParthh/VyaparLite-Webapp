@@ -26,14 +26,14 @@ const schema = z.object({ name: z.string().trim().min(1, "Enter your business na
 export function Onboarding() {
   const qc = useQueryClient();
   const [name, setName] = useState("");
-  const [type, setType] = useState(BUSINESS_TYPES[0]);
+  const [type, setType] = useState<string>(BUSINESS_TYPES[0]!);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     const p = schema.safeParse({ name });
-    if (!p.success) return setErr(p.error.issues[0].message);
+    if (!p.success) return setErr(p.error.issues[0]?.message ?? "Invalid");
     setBusy(true);
     setErr(null);
     const { data: u } = await supabase.auth.getUser();

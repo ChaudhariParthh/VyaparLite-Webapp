@@ -22,7 +22,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 });
 
 function sixMonthsBack(to: string) {
-  const [y, m] = to.split("-").map(Number);
+  const [y, m] = to.split("-").map(Number) as [number, number];
   const d = new Date(Date.UTC(y, m - 6, 1));
   return d.toISOString().slice(0, 10);
 }

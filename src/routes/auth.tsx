@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
-import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,9 +10,10 @@ import { Logo } from "@/components/app/Logo";
 type Mode = "signin" | "signup" | "forgot";
 
 export const Route = createFileRoute("/auth")({
-  validateSearch: (s: Record<string, unknown>) => ({
-    redirect: typeof s.redirect === "string" && s.redirect.startsWith("/") && !s.redirect.startsWith("//") ? s.redirect : undefined,
-  }),
+  validateSearch: (s: Record<string, unknown>): { redirect?: string } => {
+    const r = s["redirect"];
+    return typeof r === "string" && r.startsWith("/") && !r.startsWith("//") ? { redirect: r } : {};
+  },
   head: () => ({
     meta: [
       { title: "Sign in — VyaparLite" },
@@ -49,10 +49,10 @@ function AuthPage() {
     setErr(null);
     setInfo(null);
     const em = emailS.safeParse(email);
-    if (!em.success) return setErr(em.error.issues[0].message);
+    if (!em.success) return setErr(em.error.issues[0]?.message ?? "Invalid");
     if (mode !== "forgot") {
       const pw = passS.safeParse(password);
-      if (!pw.success) return setErr(pw.error.issues[0].message);
+      if (!pw.success) return setErr(pw.error.issues[0]?.message ?? "Invalid");
     }
     setBusy(true);
     try {
@@ -133,4 +133,3 @@ function AuthPage() {
   );
 }
 
-export { toast };
