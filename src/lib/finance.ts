@@ -44,7 +44,7 @@ export function todayIST(now: Date = new Date()): string {
 
 export function currentMonthRange(now: Date = new Date()): { from: string; to: string } {
   const t = todayIST(now);
-  const [y, m] = t.split("-").map(Number);
+  const [y, m] = t.split("-").map(Number) as [number, number];
   const last = new Date(Date.UTC(y, m, 0)).getUTCDate();
   const mm = String(m).padStart(2, "0");
   return { from: `${y}-${mm}-01`, to: `${y}-${mm}-${String(last).padStart(2, "0")}` };
@@ -75,8 +75,8 @@ export function summarize(txns: TxnLike[]) {
 /** Group by YYYY-MM between from..to inclusive, filling empty months. */
 export function monthlySeries(txns: TxnLike[], from: string, to: string) {
   const months: string[] = [];
-  let [y, m] = from.slice(0, 7).split("-").map(Number);
-  const [ey, em] = to.slice(0, 7).split("-").map(Number);
+  let [y, m] = from.slice(0, 7).split("-").map(Number) as [number, number];
+  const [ey, em] = to.slice(0, 7).split("-").map(Number) as [number, number];
   while (y < ey || (y === ey && m <= em)) {
     months.push(`${y}-${String(m).padStart(2, "0")}`);
     m++;

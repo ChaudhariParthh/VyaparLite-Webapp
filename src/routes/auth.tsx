@@ -49,10 +49,10 @@ function AuthPage() {
     setErr(null);
     setInfo(null);
     const em = emailS.safeParse(email);
-    if (!em.success) return setErr(em.error.issues[0].message);
+    if (!em.success) return setErr(em.error.issues[0]?.message ?? "Invalid");
     if (mode !== "forgot") {
       const pw = passS.safeParse(password);
-      if (!pw.success) return setErr(pw.error.issues[0].message);
+      if (!pw.success) return setErr(pw.error.issues[0]?.message ?? "Invalid");
     }
     setBusy(true);
     try {
