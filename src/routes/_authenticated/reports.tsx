@@ -1,12 +1,11 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowDown, ArrowUp, Download, TrendingUp } from "lucide-react";
-import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
+import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBusiness, useCategories, useTxnsInRange } from "@/lib/data";
 import { categoryBreakdown, currentMonthRange, formatINR, monthlySeries, paymentLabel, summarize, toCSV } from "@/lib/finance";
-import { DateRange, Empty, IncomeExpenseChart, PageHeader, Panel, StatCard } from "@/components/app/widgets";
+import { ChartLegend, DateRange, Empty, Figure, IncomeExpenseChart, NetTrendChart, PageHeader, Section } from "@/components/app/widgets";
 
 export const Route = createFileRoute("/_authenticated/reports")({
   head: () => ({
@@ -20,7 +19,7 @@ export const Route = createFileRoute("/_authenticated/reports")({
   component: Reports,
 });
 
-const COLORS = ["var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-1)", "var(--chart-5)", "var(--muted-foreground)"];
+const COLORS = ["var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)", "var(--chart-1)", "var(--muted-foreground)"];
 
 function Reports() {
   const { data: business } = useBusiness();
@@ -58,8 +57,9 @@ function Reports() {
   return (
     <>
       <PageHeader
-        title="Reports"
-        subtitle="Based on your saved transactions for the selected period."
+        eyebrow="Reports"
+        title="How the period went"
+        subtitle="Built only from the entries saved in your ledger."
         actions={
           <>
             <DateRange from={range.from} to={range.to} onChange={setRange} />
@@ -73,43 +73,46 @@ function Reports() {
         <p role="alert" className="text-sm text-destructive">Couldn't load report data. Please refresh.</p>
       ) : (
         <>
-          <div className="grid gap-4 sm:grid-cols-3">
-            <StatCard label="Total income" value={totals.income} tone="income" icon={<ArrowUp className="h-5 w-5" />} />
-            <StatCard label="Total expenses" value={totals.expense} tone="expense" icon={<ArrowDown className="h-5 w-5" />} />
-            <StatCard label="Net cash flow" value={totals.net} tone="info" icon={<TrendingUp className="h-5 w-5" />} hint="Income minus expenses (not profit)" />
+          <div className="grid grid-cols-2 gap-6 border-b border-rule pb-8 lg:grid-cols-3">
+            <div className="col-span-2 lg:col-span-1"><Figure label="Net cash flow" value={totals.net} tone="ink" note="Income minus expenses, not profit" /></div>
+            <Figure label="Money in" value={totals.income} tone="income" />
+            <Figure label="Money out" value={totals.expense} tone="expense" />
           </div>
-          <div className="mt-6 grid gap-6 lg:grid-cols-5">
-            <Panel title="Monthly income vs expenses" className="lg:col-span-3">
-              {data.length ? <IncomeExpenseChart data={series} /> : <Empty title="No transactions in this period" />}
-            </Panel>
-            <Panel title="Expenses by category" className="lg:col-span-2">
+          <div className="grid gap-10 pt-8 lg:grid-cols-12 lg:gap-12">
+            <div className="space-y-10 lg:col-span-7">
+              <Section title="Month by month" action={<ChartLegend />}>
+                {data.length ? <IncomeExpenseChart data={series} /> : <Empty title="No entries in this period">Pick a wider date range above.</Empty>}
+              </Section>
+              {data.length > 0 && series.length > 1 && (
+                <Section title="Net cash flow trend">
+                  <NetTrendChart data={series} />
+                </Section>
+              )}
+            </div>
+            <Section title="Where the money went" className="lg:col-span-5">
               {breakdown.length === 0 ? (
                 <Empty title="No expenses in this period" />
               ) : (
-                <>
-                  <div className="h-48">
-                    <ResponsiveContainer>
-                      <PieChart>
-                        <Pie data={breakdown} dataKey="value" nameKey="name" innerRadius={45} outerRadius={80} paddingAngle={2}>
-                          {breakdown.map((b, i) => <Cell key={b.id} fill={COLORS[i % COLORS.length]} />)}
-                        </Pie>
-                        <Tooltip formatter={(v: number) => formatINR(v)} />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </div>
-                  <ul className="mt-3 space-y-2 text-sm">
-                    {breakdown.map((b, i) => (
-                      <li key={b.id} className="flex items-center gap-2">
-                        <span className="h-2.5 w-2.5 rounded-full" style={{ background: COLORS[i % COLORS.length] }} aria-hidden />
-                        <span className="flex-1 truncate">{b.name}</span>
-                        <span className="text-muted-foreground">{totals.expense ? Math.round((b.value / totals.expense) * 100) : 0}%</span>
-                        <span className="w-28 text-right font-medium">{formatINR(b.value)}</span>
+                <ol className="space-y-4">
+                  {breakdown.map((b, i) => {
+                    const pct = totals.expense ? (b.value / totals.expense) * 100 : 0;
+                    return (
+                      <li key={b.id}>
+                        <div className="flex items-baseline gap-3 text-sm">
+                          <span className="w-5 text-xs tabular-nums text-muted-foreground">{String(i + 1).padStart(2, "0")}</span>
+                          <span className="flex-1 truncate font-medium">{b.name}</span>
+                          <span className="tabular-nums text-muted-foreground">{Math.round(pct)}%</span>
+                          <span className="figure w-28 text-right text-base">{formatINR(b.value)}</span>
+                        </div>
+                        <div className="ml-8 mt-1.5 h-1.5 rounded-full bg-muted" aria-hidden>
+                          <div className="h-full rounded-full" style={{ width: `${pct}%`, background: COLORS[i % COLORS.length] }} />
+                        </div>
                       </li>
-                    ))}
-                  </ul>
-                </>
+                    );
+                  })}
+                </ol>
               )}
-            </Panel>
+            </Section>
           </div>
         </>
       )}
