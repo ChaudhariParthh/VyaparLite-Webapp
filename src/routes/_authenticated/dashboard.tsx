@@ -1,20 +1,19 @@
 import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowDown, ArrowUp, Plus, TrendingUp } from "lucide-react";
+import { ArrowRight, Minus, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBusiness, useCategories, useTxnsInRange } from "@/lib/data";
-import { currentMonthRange, formatDate, formatINR, monthlySeries, summarize, todayIST, type TxnType } from "@/lib/finance";
-import { DateRange, Empty, IncomeExpenseChart, PageHeader, Panel, StatCard } from "@/components/app/widgets";
-import { TxnDialog } from "@/components/app/TxnDialog";
-import { cn } from "@/lib/utils";
+import { currentMonthRange, formatDate, formatINR, monthlySeries, summarize, todayIST } from "@/lib/finance";
+import { ChartLegend, DateRange, Empty, Figure, FlowBar, IncomeExpenseChart, LedgerRow, Section } from "@/components/app/widgets";
+import { useEntry } from "@/components/app/AppShell";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   head: () => ({
     meta: [
-      { title: "Dashboard — VyaparLite" },
+      { title: "Overview — VyaparLite" },
       { name: "description", content: "Your business income, expenses and net cash flow at a glance." },
-      { property: "og:title", content: "Dashboard — VyaparLite" },
+      { property: "og:title", content: "Overview — VyaparLite" },
       { property: "og:description", content: "Your business income, expenses and net cash flow at a glance." },
     ],
   }),
@@ -23,8 +22,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 
 function sixMonthsBack(to: string) {
   const [y, m] = to.split("-").map(Number) as [number, number];
-  const d = new Date(Date.UTC(y, m - 6, 1));
-  return d.toISOString().slice(0, 10);
+  return new Date(Date.UTC(y, m - 6, 1)).toISOString().slice(0, 10);
 }
 
 function greeting() {
@@ -34,8 +32,8 @@ function greeting() {
 
 function Dashboard() {
   const { data: business } = useBusiness();
+  const entry = useEntry();
   const [range, setRange] = useState(currentMonthRange());
-  const [dialog, setDialog] = useState<TxnType | null>(null);
   const bid = business?.id;
   const cats = useCategories(bid);
   const txns = useTxnsInRange(bid, range.from, range.to);
@@ -46,69 +44,88 @@ function Dashboard() {
   const totals = useMemo(() => summarize(txns.data ?? []), [txns.data]);
   const series = useMemo(() => monthlySeries(trend.data ?? [], trendFrom, today), [trend.data, trendFrom, today]);
   const catName = Object.fromEntries((cats.data ?? []).map((c) => [c.id, c.name]));
-  const recent = (txns.data ?? []).slice(0, 6);
+  const recent = (txns.data ?? []).slice(0, 7);
+  const count = txns.data?.length ?? 0;
+  const keepRate = totals.income > 0 ? Math.round((totals.net / totals.income) * 100) : null;
 
   return (
-    <>
-      <PageHeader
-        title={business?.name ?? ""}
-        subtitle={`${greeting()}! Here's your business overview.`}
-        actions={<DateRange from={range.from} to={range.to} onChange={setRange} />}
-      />
-      <div className="mb-6 grid grid-cols-2 gap-2 sm:flex sm:justify-end">
-        <Button onClick={() => setDialog("income")} disabled={!cats.data}><Plus /> Add income</Button>
-        <Button variant="outline" onClick={() => setDialog("expense")} disabled={!cats.data} className="border-primary text-primary"><Plus /> Add expense</Button>
+    <div className="rise">
+      {/* Masthead */}
+      <div className="flex flex-col gap-4 border-b border-rule pb-6 lg:flex-row lg:items-end lg:justify-between">
+        <div className="min-w-0">
+          <p className="eyebrow">{greeting()}</p>
+          <h1 className="mt-1 truncate font-display text-3xl sm:text-4xl">{business?.name}</h1>
+        </div>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          <DateRange from={range.from} to={range.to} onChange={setRange} />
+          <div className="hidden gap-2 sm:flex">
+            <Button variant="income" onClick={() => entry.add("income")} disabled={!entry.ready}><Plus /> Income</Button>
+            <Button variant="expense" onClick={() => entry.add("expense")} disabled={!entry.ready}><Minus /> Expense</Button>
+          </div>
+        </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
-        {txns.isLoading ? (
-          [0, 1, 2].map((i) => <Skeleton key={i} className="h-24 rounded-2xl" />)
-        ) : (
-          <>
-            <StatCard label="Total income" value={totals.income} tone="income" icon={<ArrowUp className="h-5 w-5" />} />
-            <StatCard label="Total expenses" value={totals.expense} tone="expense" icon={<ArrowDown className="h-5 w-5" />} />
-            <StatCard label="Net cash flow" value={totals.net} tone="info" icon={<TrendingUp className="h-5 w-5" />} hint="Income minus expenses (not profit)" />
-          </>
-        )}
-      </div>
-      {txns.error && <p role="alert" className="mt-4 text-sm text-destructive">Couldn't load transactions. Please refresh.</p>}
-
-      <div className="mt-6 grid gap-6 lg:grid-cols-5">
-        <Panel title="Income vs expenses · last 6 months" className="lg:col-span-3">
-          {trend.isLoading ? <Skeleton className="h-64" /> : <IncomeExpenseChart data={series} />}
-        </Panel>
-        <Panel title="Recent transactions" className="lg:col-span-2" action={<Link to="/transactions" className="text-sm font-medium text-primary hover:underline">View all</Link>}>
+      {/* Hero figure + split */}
+      <div className="grid gap-8 border-b border-rule py-8 lg:grid-cols-12 lg:gap-12">
+        <div className="lg:col-span-7">
           {txns.isLoading ? (
-            <Skeleton className="h-48" />
-          ) : recent.length === 0 ? (
-            <Empty title="No transactions in this period">Add your first income or expense to get started.</Empty>
+            <Skeleton className="h-28 w-3/4" />
           ) : (
-            <ul className="divide-y">
-              {recent.map((t) => (
-                <li key={t.id} className="flex items-center gap-3 py-3">
-                  <span className={cn("grid h-9 w-9 shrink-0 place-items-center rounded-full", t.type === "income" ? "bg-income-soft text-income" : "bg-expense-soft text-expense")}>
-                    {t.type === "income" ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />}
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium">{t.description}</p>
-                    <p className="truncate text-xs text-muted-foreground">{catName[t.category_id] ?? "—"}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className={cn("text-sm font-semibold", t.type === "income" ? "text-income" : "text-expense")}>
-                      {t.type === "income" ? "+" : "−"}{formatINR(Number(t.amount))}
-                    </p>
-                    <p className="text-xs text-muted-foreground">{formatDate(t.transaction_date)}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
+            <>
+              <Figure label="Net cash flow" value={totals.net} tone="ink" size="xl" />
+              <p className="mt-3 max-w-md text-sm text-muted-foreground">
+                {count === 0
+                  ? "Nothing recorded for this period yet."
+                  : <>From {count} {count === 1 ? "entry" : "entries"} between {formatDate(range.from)} and {formatDate(range.to)}.{keepRate !== null && totals.net >= 0 && <> You kept <strong className="text-foreground">{keepRate}%</strong> of what came in.</>}</>}
+                {" "}<span className="whitespace-nowrap">Income minus expenses — not accounting profit.</span>
+              </p>
+            </>
           )}
-        </Panel>
+        </div>
+        <div className="space-y-5 lg:col-span-5 lg:border-l lg:border-rule lg:pl-12">
+          {txns.isLoading ? <Skeleton className="h-28" /> : (
+            <>
+              <div className="grid grid-cols-2 gap-4">
+                <Figure label="Money in" value={totals.income} tone="income" />
+                <Figure label="Money out" value={totals.expense} tone="expense" />
+              </div>
+              <FlowBar income={totals.income} expense={totals.expense} />
+            </>
+          )}
+          {txns.error && <p role="alert" className="text-sm text-destructive">Couldn't load transactions. Please refresh.</p>}
+          <div className="grid grid-cols-2 gap-2 sm:hidden">
+            <Button variant="income" size="lg" onClick={() => entry.add("income")} disabled={!entry.ready}><Plus /> Income</Button>
+            <Button variant="expense" size="lg" onClick={() => entry.add("expense")} disabled={!entry.ready}><Minus /> Expense</Button>
+          </div>
+        </div>
       </div>
 
-      {bid && cats.data && (
-        <TxnDialog open={!!dialog} onOpenChange={(o) => !o && setDialog(null)} businessId={bid} categories={cats.data} initialType={dialog ?? "income"} />
-      )}
-    </>
+      {/* Chart + ledger */}
+      <div className="grid gap-10 pt-8 lg:grid-cols-12 lg:gap-12">
+        <Section title="Last six months" action={<ChartLegend />} className="lg:col-span-7">
+          {trend.isLoading ? <Skeleton className="h-64" /> : <IncomeExpenseChart data={series} />}
+        </Section>
+        <Section
+          title="Latest entries"
+          className="lg:col-span-5"
+          action={<Link to="/transactions" className="inline-flex items-center gap-1 text-xs font-semibold hover:underline">Open ledger <ArrowRight className="h-3 w-3" /></Link>}
+        >
+          {txns.isLoading ? (
+            <Skeleton className="h-56" />
+          ) : recent.length === 0 ? (
+            <Empty title="Your ledger is empty" action={<Button variant="outline" size="sm" onClick={() => entry.add("income")} disabled={!entry.ready}><Plus /> Record first entry</Button>}>
+              Record today's first sale or bill — it takes a few seconds.
+            </Empty>
+          ) : (
+            <div>
+              {recent.map((t) => (
+                <LedgerRow key={t.id} type={t.type} title={t.description} meta={`${catName[t.category_id] ?? "—"} · ${formatDate(t.transaction_date)}`} amount={Number(t.amount)} />
+              ))}
+            </div>
+          )}
+        </Section>
+      </div>
+      <span className="sr-only">{formatINR(0)}</span>
+    </div>
   );
 }
