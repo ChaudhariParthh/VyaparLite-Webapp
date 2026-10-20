@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Logo } from "@/components/app/Logo";
+import { AuthFrame } from "@/components/app/AuthFrame";
 
 type Mode = "signin" | "signup" | "forgot";
 
@@ -85,23 +85,17 @@ function AuthPage() {
   const titles = { signin: "Welcome back", signup: "Create your account", forgot: "Reset your password" };
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-background p-4">
-      <div className="w-full max-w-sm space-y-6 rounded-2xl border bg-card p-6 shadow-card sm:p-8">
-        <Logo />
-        <div>
-          <h1 className="text-2xl font-bold">{titles[mode]}</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Simple income & expense tracking for your business.</p>
-        </div>
+    <AuthFrame title={titles[mode]} lead={mode === "forgot" ? "We'll email you a link to set a new password." : "Your ledger, wherever you are."}>
         <form onSubmit={submit} className="space-y-4" noValidate>
           {mode === "signup" && (
             <div className="space-y-1.5">
               <Label htmlFor="name">Your name (optional)</Label>
-              <Input id="name" value={name} maxLength={100} onChange={(e) => setName(e.target.value)} autoComplete="name" />
+              <Input className="h-11 bg-card" id="name" value={name} maxLength={100} onChange={(e) => setName(e.target.value)} autoComplete="name" />
             </div>
           )}
           <div className="space-y-1.5">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
+            <Input className="h-11 bg-card" id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
           </div>
           {mode !== "forgot" && (
             <div className="space-y-1.5">
@@ -113,23 +107,22 @@ function AuthPage() {
                   </button>
                 )}
               </div>
-              <Input id="pw" type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete={mode === "signup" ? "new-password" : "current-password"} />
+              <Input className="h-11 bg-card" id="pw" type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete={mode === "signup" ? "new-password" : "current-password"} />
             </div>
           )}
           {err && <p role="alert" className="text-sm text-destructive">{err}</p>}
           {info && <p role="status" className="rounded-lg bg-accent p-3 text-sm text-accent-foreground">{info}</p>}
-          <Button type="submit" className="w-full" disabled={busy}>
+          <Button type="submit" size="lg" className="w-full" disabled={busy}>
             {busy ? "Please wait…" : mode === "signin" ? "Sign in" : mode === "signup" ? "Create account" : "Send reset link"}
           </Button>
         </form>
-        <p className="text-center text-sm text-muted-foreground">
+        <p className="mt-8 border-t border-rule pt-6 text-sm text-muted-foreground">
           {mode === "signin" ? "New to VyaparLite? " : "Already have an account? "}
           <button type="button" className="font-medium text-primary hover:underline" onClick={() => { setMode(mode === "signin" ? "signup" : "signin"); setErr(null); setInfo(null); }}>
             {mode === "signin" ? "Create an account" : "Sign in"}
           </button>
         </p>
-      </div>
-    </main>
+    </AuthFrame>
   );
 }
 

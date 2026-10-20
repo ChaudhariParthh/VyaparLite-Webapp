@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Logo } from "@/components/app/Logo";
+import { AuthFrame } from "@/components/app/AuthFrame";
 
 export const Route = createFileRoute("/reset-password")({
   head: () => ({
@@ -47,27 +47,25 @@ function ResetPassword() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-background p-4">
-      <form onSubmit={submit} className="w-full max-w-sm space-y-5 rounded-2xl border bg-card p-6 shadow-card sm:p-8">
-        <Logo />
-        <h1 className="text-2xl font-bold">Set a new password</h1>
+    <AuthFrame title="Set a new password">
+      <form onSubmit={submit} className="space-y-5">
         {!ready ? (
           <p className="text-sm text-muted-foreground">Open this page from the reset link in your email.</p>
         ) : (
           <>
             <div className="space-y-1.5">
               <Label htmlFor="np">New password</Label>
-              <Input id="np" type="password" autoComplete="new-password" value={pw} onChange={(e) => setPw(e.target.value)} />
+              <Input className="h-11 bg-card" id="np" type="password" autoComplete="new-password" value={pw} onChange={(e) => setPw(e.target.value)} />
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="np2">Confirm password</Label>
-              <Input id="np2" type="password" autoComplete="new-password" value={pw2} onChange={(e) => setPw2(e.target.value)} />
+              <Input className="h-11 bg-card" id="np2" type="password" autoComplete="new-password" value={pw2} onChange={(e) => setPw2(e.target.value)} />
             </div>
             {err && <p role="alert" className="text-sm text-destructive">{err}</p>}
-            <Button type="submit" className="w-full" disabled={busy}>{busy ? "Saving…" : "Update password"}</Button>
+            <Button type="submit" size="lg" className="w-full" disabled={busy}>{busy ? "Saving…" : "Update password"}</Button>
           </>
         )}
       </form>
-    </main>
+    </AuthFrame>
   );
 }

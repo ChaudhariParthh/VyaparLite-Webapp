@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { friendlyError, useBusiness, useCategories, type Category } from "@/lib/data";
 import type { TxnType } from "@/lib/finance";
-import { PageHeader, Panel } from "@/components/app/widgets";
+import { PageHeader, Section as Panel } from "@/components/app/widgets";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/categories")({
@@ -29,11 +29,11 @@ function Categories() {
   const cats = useCategories(business?.id);
   return (
     <>
-      <PageHeader title="Categories" subtitle="Archived categories stay on past transactions but can't be picked for new ones." />
+      <PageHeader eyebrow="Categories" title="How you sort your money" subtitle="Archive a category to hide it from new entries — past entries keep it." />
       {cats.isLoading ? (
         <Skeleton className="h-80" />
       ) : (
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid gap-12 lg:grid-cols-2">
           {(["income", "expense"] as const).map((t) => (
             <CategoryList key={t} type={t} businessId={business!.id} items={(cats.data ?? []).filter((c) => c.type === t)} />
           ))}
@@ -76,15 +76,15 @@ function CategoryList({ type, businessId, items }: { type: TxnType; businessId: 
   }
 
   return (
-    <Panel title={type === "income" ? "Income categories" : "Expense categories"}>
+    <Panel title={type === "income" ? "Money in" : "Money out"}>
       <form onSubmit={submitAdd} className="mb-4 flex gap-2">
-        <Input aria-label={`New ${type} category`} placeholder="New category name" value={name} maxLength={60} onChange={(e) => setName(e.target.value)} />
+        <Input className="bg-card" aria-label={`New ${type} category`} placeholder="New category name" value={name} maxLength={60} onChange={(e) => setName(e.target.value)} />
         <Button type="submit" disabled={add.isPending}><Plus /> Add</Button>
       </form>
-      <ul className="divide-y">
+      <ul>
         {items.map((c) => (
-          <li key={c.id} className="flex items-center gap-2 py-2.5">
-            <span className={cn("h-2.5 w-2.5 shrink-0 rounded-full", type === "income" ? "bg-income" : "bg-expense")} aria-hidden />
+          <li key={c.id} className="flex min-h-12 items-center gap-2 border-b border-rule py-1.5">
+            <span className={cn("h-6 w-1 shrink-0 rounded-full", type === "income" ? "bg-income" : "bg-expense")} aria-hidden />
             {editId === c.id ? (
               <form
                 className="flex flex-1 gap-1"

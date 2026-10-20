@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { friendlyError, useBusiness } from "@/lib/data";
 import { BUSINESS_TYPES } from "@/components/app/Onboarding";
-import { PageHeader, Panel } from "@/components/app/widgets";
+import { PageHeader, Section as Panel } from "@/components/app/widgets";
 
 export const Route = createFileRoute("/_authenticated/settings")({
   head: () => ({
@@ -50,18 +50,18 @@ function Settings() {
 
   return (
     <>
-      <PageHeader title="Settings" />
-      <div className="grid max-w-2xl gap-6">
+      <PageHeader eyebrow="Settings" title="Your business" />
+      <div className="grid max-w-2xl gap-12">
         <Panel title="Business profile">
           <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); save.mutate(); }}>
             <div className="space-y-1.5">
               <Label htmlFor="bn">Business name</Label>
-              <Input id="bn" value={name} maxLength={120} onChange={(e) => setName(e.target.value)} />
+              <Input className="bg-card" id="bn" value={name} maxLength={120} onChange={(e) => setName(e.target.value)} />
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="bt">Business type</Label>
               <Select value={type} onValueChange={setType}>
-                <SelectTrigger id="bt"><SelectValue /></SelectTrigger>
+                <SelectTrigger id="bt" className="bg-card"><SelectValue /></SelectTrigger>
                 <SelectContent>{types.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent>
               </Select>
             </div>

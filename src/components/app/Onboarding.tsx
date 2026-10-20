@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { friendlyError } from "@/lib/data";
-import { Logo } from "./Logo";
+import { AuthFrame } from "./AuthFrame";
 
 export const BUSINESS_TYPES = [
   "Retail Shop",
@@ -47,29 +47,24 @@ export function Onboarding() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-background p-4">
-      <form onSubmit={submit} className="w-full max-w-md space-y-5 rounded-2xl border bg-card p-6 shadow-card sm:p-8">
-        <Logo />
-        <div>
-          <h1 className="text-2xl font-bold">Set up your business</h1>
-          <p className="mt-1 text-sm text-muted-foreground">We'll add common income and expense categories for you.</p>
-        </div>
+    <AuthFrame title="Tell us about your business" lead="We'll set up common income and expense categories so you can start recording right away.">
+      <form onSubmit={submit} className="space-y-5">
         <div className="space-y-2">
           <Label htmlFor="bname">Business name</Label>
-          <Input id="bname" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Sharma General Store" maxLength={120} />
+          <Input className="h-11 bg-card" id="bname" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Sharma General Store" maxLength={120} />
         </div>
         <div className="space-y-2">
           <Label htmlFor="btype">Business type</Label>
           <Select value={type} onValueChange={setType}>
-            <SelectTrigger id="btype"><SelectValue /></SelectTrigger>
+            <SelectTrigger id="btype" className="h-11 bg-card"><SelectValue /></SelectTrigger>
             <SelectContent>
               {BUSINESS_TYPES.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}
             </SelectContent>
           </Select>
         </div>
         {err && <p role="alert" className="text-sm text-destructive">{err}</p>}
-        <Button type="submit" className="w-full" disabled={busy}>{busy ? "Creating…" : "Continue to dashboard"}</Button>
+        <Button type="submit" size="lg" className="w-full" disabled={busy}>{busy ? "Creating…" : "Continue to dashboard"}</Button>
       </form>
-    </main>
+    </AuthFrame>
   );
 }
