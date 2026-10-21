@@ -1,4 +1,4 @@
-import icon from "@/assets/vyaparlite-icon.png.asset.json";
+import icon from "@/assets/vyaparlite-icon-clean.png.asset.json";
 import { cn } from "@/lib/utils";
 
 /** Brand logo: storefront icon + "Vyapar" in ink and "Lite" in brand green. `onDark` for ink surfaces. */
