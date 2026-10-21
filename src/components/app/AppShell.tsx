@@ -50,7 +50,7 @@ export function AppShell({ business, children }: { business: Business; children:
         {/* Desktop masthead */}
         <header className="sticky top-0 z-30 bg-ink text-ink-foreground">
           <div className="mx-auto flex h-14 max-w-7xl items-center gap-6 px-4 sm:px-6 lg:px-10">
-            <Link to="/dashboard" className="shrink-0 rounded-sm"><Logo /></Link>
+            <Link to="/dashboard" className="shrink-0 rounded-sm"><Logo onDark /></Link>
             <nav aria-label="Main" className="hidden h-full items-stretch gap-1 md:flex">
               {NAV.map((n) => {
                 const active = path.startsWith(n.to);
