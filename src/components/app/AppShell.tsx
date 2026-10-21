@@ -50,7 +50,7 @@ export function AppShell({ business, children }: { business: Business; children:
         {/* Desktop masthead */}
         <header className="sticky top-0 z-30 bg-ink text-ink-foreground">
           <div className="mx-auto flex h-14 max-w-7xl items-center gap-6 px-4 sm:px-6 lg:px-10">
-            <Link to="/dashboard" className="shrink-0 rounded-sm"><Logo /></Link>
+            <Link to="/dashboard" className="shrink-0 rounded-sm"><Logo onDark /></Link>
             <nav aria-label="Main" className="hidden h-full items-stretch gap-1 md:flex">
               {NAV.map((n) => {
                 const active = path.startsWith(n.to);
@@ -65,14 +65,14 @@ export function AppShell({ business, children }: { business: Business; children:
                     )}
                   >
                     {n.label}
-                    <span className={cn("absolute inset-x-3 bottom-0 h-0.5 bg-marigold transition-transform origin-left", active ? "scale-x-100" : "scale-x-0")} />
+                    <span className={cn("absolute inset-x-3 bottom-0 h-0.5 bg-leaf transition-transform origin-left", active ? "scale-x-100" : "scale-x-0")} />
                   </Link>
                 );
               })}
             </nav>
             <div className="ml-auto flex items-center gap-3">
               <span className="hidden max-w-[14rem] truncate text-sm text-ink-foreground/70 lg:inline">{business.name}</span>
-              <Button variant="marigold" size="sm" className="hidden md:inline-flex" onClick={() => entry.add()} disabled={!entry.ready}>
+              <Button variant="leaf" size="sm" className="hidden md:inline-flex" onClick={() => entry.add()} disabled={!entry.ready}>
                 <Plus /> New entry
               </Button>
               <button onClick={signOut} className="hidden rounded-sm p-1.5 text-ink-foreground/60 hover:text-ink-foreground md:block" aria-label="Sign out">
@@ -117,7 +117,7 @@ function TabLink({ to, label, icon: Icon, active }: { to: string; label: string;
   return (
     <Link to={to} aria-current={active ? "page" : undefined} className={cn("flex min-h-14 flex-col items-center justify-center gap-0.5 text-[11px] font-medium", active ? "text-foreground" : "text-muted-foreground")}>
       <Icon className="h-5 w-5" aria-hidden />
-      <span className={cn("border-b-2 pb-0.5", active ? "border-marigold" : "border-transparent")}>{label}</span>
+      <span className={cn("border-b-2 pb-0.5", active ? "border-leaf" : "border-transparent")}>{label}</span>
     </Link>
   );
 }

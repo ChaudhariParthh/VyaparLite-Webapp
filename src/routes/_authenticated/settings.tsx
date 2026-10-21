@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { LogOut } from "lucide-react";
 import { toast } from "sonner";
@@ -78,6 +78,10 @@ function Settings() {
             <p className="text-xs text-muted-foreground">VyaparLite currently supports INR and Indian Standard Time only.</p>
             <Button type="submit" disabled={save.isPending}>{save.isPending ? "Saving…" : "Save changes"}</Button>
           </form>
+        </Panel>
+        <Panel title="Categories">
+          <p className="mb-3 text-sm text-muted-foreground">Rename, add or archive the categories you sort entries into.</p>
+          <Button asChild variant="outline"><Link to="/categories">Manage categories</Link></Button>
         </Panel>
         <Panel title="Account">
           <p className="text-sm text-muted-foreground">Signed in as</p>

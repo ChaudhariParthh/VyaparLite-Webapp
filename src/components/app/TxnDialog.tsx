@@ -120,7 +120,7 @@ export function TxnDialog({ open, onOpenChange, businessId, categories, initialT
 
           <div>
             <Label htmlFor="amt" className="eyebrow">Amount</Label>
-            <div className={cn("mt-1 flex items-baseline gap-1 border-b-2 pb-1 transition-colors focus-within:border-marigold", errors.amount ? "border-destructive" : "border-input")}>
+            <div className={cn("mt-1 flex items-baseline gap-1 border-b-2 pb-1 transition-colors focus-within:border-leaf", errors.amount ? "border-destructive" : "border-input")}>
               <span className={cn("figure text-4xl", tone)} aria-hidden>₹</span>
               <input
                 id="amt"

@@ -122,8 +122,8 @@ export function NetTrendChart({ data, height = 200 }: { data: { month: string; i
         <AreaChart data={rows} margin={{ left: -12, right: 0, top: 8 }}>
           <defs>
             <linearGradient id="netfill" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0%" stopColor="var(--marigold)" stopOpacity={0.35} />
-              <stop offset="100%" stopColor="var(--marigold)" stopOpacity={0} />
+              <stop offset="0%" stopColor="var(--leaf)" stopOpacity={0.35} />
+              <stop offset="100%" stopColor="var(--leaf)" stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid vertical={false} stroke="var(--rule)" strokeDasharray="2 4" />
@@ -139,7 +139,7 @@ export function NetTrendChart({ data, height = 200 }: { data: { month: string; i
 
 export function Empty({ title, children, action }: { title: string; children?: ReactNode; action?: ReactNode }) {
   return (
-    <div className="flex flex-col items-start gap-1 border-l-2 border-marigold py-3 pl-4">
+    <div className="flex flex-col items-start gap-1 border-l-2 border-leaf py-3 pl-4">
       <p className="font-display text-lg">{title}</p>
       {children && <div className="text-sm text-muted-foreground">{children}</div>}
       {action && <div className="mt-3">{action}</div>}

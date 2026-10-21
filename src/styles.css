@@ -6,7 +6,7 @@
 
 /*
  * VyaparLite design system — "Ledger" direction.
- * Warm paper surfaces, deep forest ink, a single marigold accent.
+ * Warm paper surfaces, deep forest ink, a single leaf accent.
  * Editorial serif (Fraunces) for figures and headings, Instrument Sans for UI.
  * Income = forest green, Expense = terracotta. Hairline rules over boxed cards.
  */
@@ -60,7 +60,7 @@
   --color-info-soft: var(--info-soft);
   --color-ink: var(--ink);
   --color-ink-foreground: var(--ink-foreground);
-  --color-marigold: var(--marigold);
+  --color-leaf: var(--leaf);
   --color-paper: var(--paper);
   --color-rule: var(--rule);
   --shadow-card: var(--shadow-card);
@@ -71,28 +71,28 @@
 
 :root {
   --radius: 0.5rem;
-  --paper: oklch(0.975 0.008 85);
-  --background: oklch(0.975 0.008 85);
-  --foreground: oklch(0.24 0.03 165);
+  --paper: oklch(0.972 0.014 88);
+  --background: oklch(0.972 0.014 88);
+  --foreground: oklch(0.22 0.04 160);
   --card: oklch(0.99 0.004 85);
   --card-foreground: oklch(0.24 0.03 165);
   --popover: oklch(0.99 0.004 85);
   --popover-foreground: oklch(0.24 0.03 165);
-  --ink: oklch(0.27 0.045 165);
+  --ink: oklch(0.29 0.06 158);
   --ink-foreground: oklch(0.96 0.012 85);
-  --primary: oklch(0.27 0.045 165);
+  --primary: oklch(0.29 0.06 158);
   --primary-foreground: oklch(0.97 0.01 85);
-  --marigold: oklch(0.77 0.15 70);
+  --leaf: oklch(0.76 0.19 135);
   --secondary: oklch(0.94 0.012 85);
-  --secondary-foreground: oklch(0.27 0.045 165);
+  --secondary-foreground: oklch(0.29 0.06 158);
   --muted: oklch(0.945 0.01 85);
   --muted-foreground: oklch(0.5 0.02 120);
-  --accent: oklch(0.93 0.05 80);
-  --accent-foreground: oklch(0.36 0.07 60);
+  --accent: oklch(0.93 0.06 140);
+  --accent-foreground: oklch(0.35 0.09 150);
   --destructive: oklch(0.55 0.15 35);
   --destructive-foreground: oklch(0.98 0.01 85);
-  --income: oklch(0.47 0.09 160);
-  --income-soft: oklch(0.93 0.03 160);
+  --income: oklch(0.52 0.14 150);
+  --income-soft: oklch(0.94 0.05 145);
   --expense: oklch(0.56 0.14 38);
   --expense-soft: oklch(0.94 0.035 45);
   --info: oklch(0.27 0.045 165);
@@ -100,20 +100,20 @@
   --rule: oklch(0.88 0.012 85);
   --border: oklch(0.89 0.012 85);
   --input: oklch(0.86 0.014 85);
-  --ring: oklch(0.77 0.15 70);
-  --chart-1: oklch(0.47 0.09 160);
+  --ring: oklch(0.62 0.17 145);
+  --chart-1: oklch(0.52 0.14 150);
   --chart-2: oklch(0.56 0.14 38);
-  --chart-3: oklch(0.77 0.15 70);
+  --chart-3: oklch(0.76 0.19 135);
   --chart-4: oklch(0.42 0.05 250);
   --chart-5: oklch(0.62 0.06 130);
   --sidebar: oklch(0.27 0.045 165);
   --sidebar-foreground: oklch(0.9 0.015 85);
-  --sidebar-primary: oklch(0.77 0.15 70);
+  --sidebar-primary: oklch(0.76 0.19 135);
   --sidebar-primary-foreground: oklch(0.24 0.03 165);
   --sidebar-accent: oklch(0.33 0.045 165);
   --sidebar-accent-foreground: oklch(0.97 0.01 85);
   --sidebar-border: oklch(0.34 0.04 165);
-  --sidebar-ring: oklch(0.77 0.15 70);
+  --sidebar-ring: oklch(0.76 0.19 135);
   --shadow-card: 0 1px 0 oklch(0.24 0.03 165 / 0.04);
   --shadow-lift: 0 18px 40px -20px oklch(0.24 0.03 165 / 0.35);
 }
@@ -132,7 +132,7 @@
     font-feature-settings: "ss01", "tnum";
   }
   :focus-visible {
-    outline: 2px solid var(--marigold);
+    outline: 2px solid var(--leaf);
     outline-offset: 2px;
   }
   @media (prefers-reduced-motion: reduce) {
