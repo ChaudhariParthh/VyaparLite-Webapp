@@ -81,7 +81,6 @@ function Transactions() {
         eyebrow="Ledger"
         title="Every rupee, in order"
         subtitle={<>{filtered.length} {filtered.length === 1 ? "entry" : "entries"} · <span className="text-income">+{formatINR(sums.income)}</span> · <span className="text-expense">−{formatINR(sums.expense)}</span></>}
-        actions={<Button onClick={() => entry.add()} disabled={!entry.ready} className="hidden md:inline-flex"><Plus /> New entry</Button>}
       />
       <div>
         <div className="mb-6 grid gap-2 sm:grid-cols-2 lg:grid-cols-[minmax(12rem,1fr)_auto_auto_auto_auto] lg:items-center">
