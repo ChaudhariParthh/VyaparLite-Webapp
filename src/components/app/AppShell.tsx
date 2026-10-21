@@ -65,14 +65,14 @@ export function AppShell({ business, children }: { business: Business; children:
                     )}
                   >
                     {n.label}
-                    <span className={cn("absolute inset-x-3 bottom-0 h-0.5 bg-marigold transition-transform origin-left", active ? "scale-x-100" : "scale-x-0")} />
+                    <span className={cn("absolute inset-x-3 bottom-0 h-0.5 bg-leaf transition-transform origin-left", active ? "scale-x-100" : "scale-x-0")} />
                   </Link>
                 );
               })}
             </nav>
             <div className="ml-auto flex items-center gap-3">
               <span className="hidden max-w-[14rem] truncate text-sm text-ink-foreground/70 lg:inline">{business.name}</span>
-              <Button variant="marigold" size="sm" className="hidden md:inline-flex" onClick={() => entry.add()} disabled={!entry.ready}>
+              <Button variant="leaf" size="sm" className="hidden md:inline-flex" onClick={() => entry.add()} disabled={!entry.ready}>
                 <Plus /> New entry
               </Button>
               <button onClick={signOut} className="hidden rounded-sm p-1.5 text-ink-foreground/60 hover:text-ink-foreground md:block" aria-label="Sign out">
@@ -117,7 +117,7 @@ function TabLink({ to, label, icon: Icon, active }: { to: string; label: string;
   return (
     <Link to={to} aria-current={active ? "page" : undefined} className={cn("flex min-h-14 flex-col items-center justify-center gap-0.5 text-[11px] font-medium", active ? "text-foreground" : "text-muted-foreground")}>
       <Icon className="h-5 w-5" aria-hidden />
-      <span className={cn("border-b-2 pb-0.5", active ? "border-marigold" : "border-transparent")}>{label}</span>
+      <span className={cn("border-b-2 pb-0.5", active ? "border-leaf" : "border-transparent")}>{label}</span>
     </Link>
   );
 }

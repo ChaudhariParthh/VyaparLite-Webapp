@@ -26,7 +26,7 @@ function Index() {
     <div className="min-h-screen overflow-x-hidden">
       <header className="mx-auto flex max-w-7xl items-center justify-between px-5 py-6 sm:px-10">
         <Logo />
-        <Link to="/auth" className="text-sm font-semibold underline decoration-marigold decoration-2 underline-offset-4">Sign in</Link>
+        <Link to="/auth" className="text-sm font-semibold underline decoration-leaf decoration-2 underline-offset-4">Sign in</Link>
       </header>
 
       <main className="mx-auto max-w-7xl px-5 sm:px-10">
@@ -49,7 +49,7 @@ function Index() {
           <figure className="rise self-end lg:col-span-5" aria-label="Sample ledger illustration">
             <div className="rounded-md bg-ink p-6 text-ink-foreground shadow-lift sm:p-8">
               <p className="eyebrow text-ink-foreground/50">Sample · net cash flow</p>
-              <p className="figure mt-2 text-5xl text-marigold">₹38,400</p>
+              <p className="figure mt-2 text-5xl text-leaf">₹38,400</p>
               <div className="mt-6 space-y-3 text-sm">
                 {[["Counter sales", "+₹12,500", true], ["Shop rent", "−₹9,000", false], ["UPI — Mehta & Sons", "+₹4,200", true]].map(([d, a, inc]) => (
                   <div key={d as string} className="flex justify-between border-t border-ink-foreground/15 pt-3">

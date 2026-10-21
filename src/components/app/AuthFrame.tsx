@@ -8,7 +8,7 @@ export function AuthFrame({ title, lead, children }: { title: string; lead?: str
       <aside className="relative hidden flex-col justify-between overflow-hidden bg-ink p-12 text-ink-foreground lg:flex">
         <Logo />
         <div className="max-w-md">
-          <p className="figure text-7xl leading-none text-marigold">₹</p>
+          <p className="figure text-7xl leading-none text-leaf">₹</p>
           <p className="mt-6 font-display text-4xl leading-tight">Financial clarity for people who run real businesses.</p>
           <p className="mt-4 text-sm text-ink-foreground/60">Record what comes in and what goes out. VyaparLite keeps the ledger; you keep running the shop.</p>
         </div>

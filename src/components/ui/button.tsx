@@ -14,10 +14,10 @@ const buttonVariants = cva(
         outline: "border border-input bg-transparent hover:bg-secondary",
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/70",
         ghost: "hover:bg-secondary",
-        link: "text-primary underline underline-offset-4 decoration-marigold decoration-2 hover:decoration-primary",
+        link: "text-primary underline underline-offset-4 decoration-leaf decoration-2 hover:decoration-primary",
         income: "bg-income text-primary-foreground hover:bg-income/90",
         expense: "bg-expense text-destructive-foreground hover:bg-expense/90",
-        marigold: "bg-marigold text-ink hover:bg-marigold/90",
+        leaf: "bg-leaf text-ink hover:bg-leaf/90",
       },
       size: {
         default: "h-10 px-4",
