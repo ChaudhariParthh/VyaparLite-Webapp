@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Minus, Plus } from "lucide-react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { ArrowLeft, ArrowRight, Minus, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBusiness, useCategories, useTxnsInRange } from "@/lib/data";
@@ -31,6 +31,7 @@ function greeting() {
 }
 
 function Dashboard() {
+  const navigate = useNavigate();
   const { data: business } = useBusiness();
   const entry = useEntry();
   const [range, setRange] = useState(currentMonthRange());
@@ -52,9 +53,19 @@ function Dashboard() {
     <div className="rise">
       {/* Masthead */}
       <div className="flex flex-col gap-4 border-b border-rule pb-6 lg:flex-row lg:items-end lg:justify-between">
-        <div className="min-w-0">
-          <p className="eyebrow">{greeting()}</p>
-          <h1 className="mt-1 truncate font-display text-3xl sm:text-4xl">{business?.name}</h1>
+        <div className="flex min-w-0 items-start gap-3">
+          <button
+            type="button"
+            onClick={() => navigate({ to: "/" })}
+            aria-label="Back to home page"
+            className="mt-1 grid h-10 w-10 shrink-0 place-items-center rounded-full border border-rule text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+          >
+            <ArrowLeft className="h-5 w-5" aria-hidden />
+          </button>
+          <div className="min-w-0">
+            <p className="eyebrow">{greeting()}</p>
+            <h1 className="mt-1 truncate font-display text-3xl sm:text-4xl">{business?.name}</h1>
+          </div>
         </div>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <DateRange from={range.from} to={range.to} onChange={setRange} />

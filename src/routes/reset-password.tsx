@@ -3,9 +3,9 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AuthFrame } from "@/components/app/AuthFrame";
+import { PasswordInput } from "@/components/app/PasswordInput";
 
 export const Route = createFileRoute("/reset-password")({
   head: () => ({
@@ -55,11 +55,11 @@ function ResetPassword() {
           <>
             <div className="space-y-1.5">
               <Label htmlFor="np">New password</Label>
-              <Input className="h-11 bg-card" id="np" type="password" autoComplete="new-password" value={pw} onChange={(e) => setPw(e.target.value)} />
+              <PasswordInput id="np" autoComplete="new-password" value={pw} onChange={(e) => setPw(e.target.value)} />
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="np2">Confirm password</Label>
-              <Input className="h-11 bg-card" id="np2" type="password" autoComplete="new-password" value={pw2} onChange={(e) => setPw2(e.target.value)} />
+              <PasswordInput id="np2" autoComplete="new-password" value={pw2} onChange={(e) => setPw2(e.target.value)} />
             </div>
             {err && <p role="alert" className="text-sm text-destructive">{err}</p>}
             <Button type="submit" size="lg" className="w-full" disabled={busy}>{busy ? "Saving…" : "Update password"}</Button>
