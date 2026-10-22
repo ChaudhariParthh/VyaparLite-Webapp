@@ -1,8 +1,18 @@
 import type { ReactNode } from "react";
+import { useNavigate, useRouter } from "@tanstack/react-router";
+import { ArrowLeft } from "lucide-react";
 import { Logo } from "./Logo";
 
-/** Split frame for sign-in, onboarding and password pages: ink editorial panel + paper form. */
+/** Split frame for sign-in, onboarding and password pages: ink editorial panel + paper form. Includes a back arrow. */
 export function AuthFrame({ title, lead, children }: { title: string; lead?: string; children: ReactNode }) {
+  const router = useRouter();
+  const navigate = useNavigate();
+
+  function goBack() {
+    if (window.history.length > 1) router.history.back();
+    else navigate({ to: "/" });
+  }
+
   return (
     <div className="grid min-h-screen lg:grid-cols-[1.1fr_1fr]">
       <aside className="relative hidden flex-col justify-between overflow-hidden bg-ink p-12 text-ink-foreground lg:flex">
@@ -16,6 +26,14 @@ export function AuthFrame({ title, lead, children }: { title: string; lead?: str
       </aside>
       <main className="flex items-center justify-center px-5 py-10 sm:px-10">
         <div className="rise w-full max-w-sm">
+          <button
+            type="button"
+            onClick={goBack}
+            aria-label="Go back"
+            className="mb-5 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <ArrowLeft className="h-4 w-4" aria-hidden /> Back
+          </button>
           <div className="mb-10 lg:hidden"><Logo /></div>
           <h1 className="font-display text-3xl">{title}</h1>
           {lead && <p className="mt-2 text-sm text-muted-foreground">{lead}</p>}

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AuthFrame } from "@/components/app/AuthFrame";
+import { PasswordInput } from "@/components/app/PasswordInput";
 
 type Mode = "signin" | "signup" | "forgot";
 
@@ -107,7 +108,7 @@ function AuthPage() {
                   </button>
                 )}
               </div>
-              <Input className="h-11 bg-card" id="pw" type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete={mode === "signup" ? "new-password" : "current-password"} />
+              <PasswordInput id="pw" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete={mode === "signup" ? "new-password" : "current-password"} />
             </div>
           )}
           {err && <p role="alert" className="text-sm text-destructive">{err}</p>}
