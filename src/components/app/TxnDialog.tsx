@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PAYMENT_METHODS, isValidAmount, todayIST, type TxnType } from "@/lib/finance";
 import { friendlyError, useSaveTxn, type Category, type Txn } from "@/lib/data";
+import { DEFAULT_CATEGORY_COLOR } from "@/lib/categories";
 import { cn } from "@/lib/utils";
 
 type Errs = { amount?: string; description?: string; category?: string; date?: string; notes?: string };
@@ -157,6 +158,11 @@ export function TxnDialog({ open, onOpenChange, businessId, categories, initialT
                     categoryId === c.id ? "border-ink bg-ink text-ink-foreground" : "border-input bg-card hover:border-foreground/40",
                   )}
                 >
+                  <span
+                    className="mr-1.5 inline-block h-2 w-2 shrink-0 rounded-full"
+                    style={{ backgroundColor: c.color ?? DEFAULT_CATEGORY_COLOR[c.type] }}
+                    aria-hidden
+                  />
                   {c.name}
                 </button>
               ))}

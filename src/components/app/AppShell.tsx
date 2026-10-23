@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { BarChart3, Home, List, LogOut, Plus, Settings, Tags } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,6 +7,13 @@ import type { TxnType } from "@/lib/finance";
 import { Logo } from "./Logo";
 import { TxnDialog } from "./TxnDialog";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 
 const NAV = [
@@ -27,7 +34,6 @@ export const useEntry = () => useContext(EntryCtx);
 
 export function AppShell({ business, children }: { business: Business; children: ReactNode }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
-  const navigate = useNavigate();
   const cats = useCategories(business.id);
   const [open, setOpen] = useState(false);
   const [type, setType] = useState<TxnType>("income");
@@ -38,11 +44,6 @@ export function AppShell({ business, children }: { business: Business; children:
     add: (t = "income") => { setEditing(null); setType(t); setOpen(true); },
     edit: (t) => { setEditing(t); setOpen(true); },
   };
-
-  async function signOut() {
-    await supabase.auth.signOut();
-    navigate({ to: "/auth" });
-  }
 
   return (
     <EntryCtx.Provider value={entry}>
@@ -75,12 +76,7 @@ export function AppShell({ business, children }: { business: Business; children:
               <Button variant="leaf" size="sm" className="hidden md:inline-flex" onClick={() => entry.add()} disabled={!entry.ready}>
                 <Plus /> New entry
               </Button>
-              <button onClick={signOut} className="hidden rounded-sm p-1.5 text-ink-foreground/60 hover:text-ink-foreground md:block" aria-label="Sign out">
-                <LogOut className="h-4 w-4" />
-              </button>
-              <span className="grid h-8 w-8 place-items-center rounded-full border border-ink-foreground/25 font-display text-sm md:hidden" aria-hidden>
-                {business.name.charAt(0).toUpperCase()}
-              </span>
+              <UserMenu businessName={business.name} />
             </div>
           </div>
         </header>
@@ -119,5 +115,42 @@ function TabLink({ to, label, icon: Icon, active }: { to: string; label: string;
       <Icon className="h-5 w-5" aria-hidden />
       <span className={cn("border-b-2 pb-0.5", active ? "border-leaf" : "border-transparent")}>{label}</span>
     </Link>
+  );
+}
+
+function UserMenu({ businessName }: { businessName: string }) {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setEmail(data.user?.email ?? ""));
+  }, []);
+
+  async function signOut() {
+    await supabase.auth.signOut();
+    navigate({ to: "/auth" });
+  }
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button
+          className="grid h-8 w-8 place-items-center rounded-full border border-ink-foreground/25 font-display text-sm transition-colors hover:border-ink-foreground/60"
+          aria-label="Account menu"
+        >
+          {businessName.charAt(0).toUpperCase()}
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="min-w-56 border-rule bg-paper">
+        <div className="px-2 py-1.5">
+          <p className="truncate text-sm font-medium">{businessName}</p>
+          {email && <p className="truncate text-xs text-muted-foreground">{email}</p>}
+        </div>
+        <DropdownMenuSeparator className="bg-rule" />
+        <DropdownMenuItem onSelect={signOut} className="gap-2 text-destructive focus:text-destructive">
+          <LogOut className="h-4 w-4" /> Sign out
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

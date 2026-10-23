@@ -51,6 +51,7 @@ export type Database = {
         Row: {
           archived: boolean
           business_id: string
+          color: string | null
           created_at: string
           id: string
           name: string
@@ -60,6 +61,7 @@ export type Database = {
         Insert: {
           archived?: boolean
           business_id: string
+          color?: string | null
           created_at?: string
           id?: string
           name: string
@@ -69,6 +71,7 @@ export type Database = {
         Update: {
           archived?: boolean
           business_id?: string
+          color?: string | null
           created_at?: string
           id?: string
           name?: string
