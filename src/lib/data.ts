@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import type { TxnType } from "./finance";
+import { categoryInUseError } from "./categories";
 
 export interface Business {
   id: string;
