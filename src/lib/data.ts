@@ -14,6 +14,7 @@ export interface Category {
   name: string;
   type: TxnType;
   archived: boolean;
+  color: string | null;
 }
 export interface Txn {
   id: string;
@@ -50,7 +51,7 @@ export function useCategories(businessId?: string) {
     queryFn: async (): Promise<Category[]> => {
       const { data, error } = await supabase
         .from("categories")
-        .select("id,name,type,archived")
+        .select("id,name,type,archived,color")
         .eq("business_id", businessId!)
         .order("name");
       if (error) throw error;
@@ -124,6 +125,25 @@ export function useDeleteTxn() {
       if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["txns"] }),
+  });
+}
+
+/** Categories with entries cannot be deleted — the ledger must stay complete. */
+export function useDeleteCategory() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (c: Category) => {
+      const { count, error } = await supabase
+        .from("transactions")
+        .select("id", { count: "exact", head: true })
+        .eq("category_id", c.id);
+      if (error) throw error;
+      const blocked = categoryInUseError(count ?? 0);
+      if (blocked) throw new Error(blocked);
+      const { error: delError } = await supabase.from("categories").delete().eq("id", c.id);
+      if (delError) throw delError;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["categories"] }),
   });
 }
 
